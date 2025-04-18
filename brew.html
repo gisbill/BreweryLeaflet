@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Boulder County Breweries Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+    .emoji-icon {
+      font-size: 48px;
+      line-height: 48px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([40.015, -105.2705], 12);
+
+    const baseMaps = {
+      "Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> & OpenStreetMap contributors'
+      }),
+      "Dark": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> & OpenStreetMap contributors'
+      }),
+      "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye'
+      })
+    };
+
+    baseMaps["Light"].addTo(map);
+
+    L.control.layers(baseMaps).addTo(map);
+
+    const breweries = [
+      {
+        name: "Avery Brewing Company",
+        lat: 40.0625,
+        lon: -105.1986,
+        beerStyle: "IPA",
+        finalScore: 4.58,
+        url: "https://www.averybrewing.com/"
+      },
+      {
+        name: "Twisted Pine Brewing",
+        lat: 39.9931,
+        lon: -105.2428,
+        beerStyle: "Fruit Beer",
+        finalScore: 4.36,
+        url: "https://www.twistedpinebrewing.com/"
+      },
+      {
+        name: "Sanitas Brewing",
+        lat: 40.0246,
+        lon: -105.2463,
+        beerStyle: "Saison",
+        finalScore: 4.49,
+        url: "https://www.sanitasbrewing.com/"
+      },
+      {
+        name: "Upslope Brewing",
+        lat: 40.0357,
+        lon: -105.2413,
+        beerStyle: "Lager",
+        finalScore: 4.53,
+        url: "https://www.upslopebrewing.com/"
+      },
+      {
+        name: "VisionQuest Brewing",
+        lat: 40.0199,
+        lon: -105.2481,
+        beerStyle: "Experimental",
+        finalScore: 4.63,
+        url: "https://www.visionquestbrewing.com/"
+      },
+      {
+        name: "Cellar West Artisan Ales",
+        lat: 40.0048,
+        lon: -105.0901,
+        beerStyle: "Wild Ale",
+        finalScore: 4.83,
+        url: "https://www.cellarwest.com/"
+      },
+      {
+        name: "Wild Provisions",
+        lat: 40.0229,
+        lon: -105.2516,
+        beerStyle: "Czech-style Lager",
+        finalScore: 4.66,
+        url: "https://wildprovisions.com/"
+      }
+    ];
+
+    const icons = {
+      IPA: "🍺",
+      "Fruit Beer": "🍓",
+      Saison: "🌾",
+      Lager: "🍻",
+      Experimental: "🧪",
+      "Wild Ale": "🍷",
+      "Czech-style Lager": "🇨🇿"
+    };
+
+    breweries.forEach(brewery => {
+      const emoji = icons[brewery.beerStyle] || "🍻";
+
+      const icon = L.divIcon({
+        className: 'emoji-icon',
+        html: emoji
+      });
+
+      L.marker([brewery.lat, brewery.lon], { icon })
+        .addTo(map)
+        .bindPopup(`<strong><a href="${brewery.url}" target="_blank">${brewery.name}</a></strong><br>Style: ${brewery.beerStyle} ${emoji}<br>Final Score: ${brewery.finalScore}`);
+    });
+  </script>
+</body>
+</html>
